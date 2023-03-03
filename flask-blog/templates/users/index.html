@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    博客首页
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+        #container {
+            width: 1000px;
+            margin: 0 auto;
+        }
+        .article {
+            width: 1000px;
+            background: darkseagreen;
+            height: 50px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid gray;
+        }
+    .article
+    </style>
+{% endblock %}
+
+{% block newContent %}
+    <div id="container">
+        <div class="article"></div>
+        <div class="article"></div>
+        <div class="article"></div>
+        <div class="article"></div>
+        <div class="article"></div>
+        <div class="article"></div>
+        <div class="article"></div>
+        <div class="article"></div>
+    </div>
+{% endblock %}

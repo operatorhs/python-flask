@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<br/>
+<h1>所有用户</h1>
+{% for user in users %}
+    <p>{{ loop.index }}-{{ user.username }}-{{ user.password }}---{{ user.password_count }}</p>
+{% endfor %}
+<br/>
+<h2>一个用户</h2>
+<p>{{ user.username }}</p>
+</body>
+</html>
