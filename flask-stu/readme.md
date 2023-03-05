@@ -25,3 +25,16 @@
 
 odoo
 
+converter
+
+# Flask 四大内置对象
+- Request
+    - request
+- Session
+    - session
+-G
+    g
+- Config
+    模版中 config
+    python 对象中 app.config
+
