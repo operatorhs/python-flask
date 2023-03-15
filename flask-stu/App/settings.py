@@ -5,6 +5,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 print(os.path.dirname(os.path.abspath(__name__)))
 
+
 def get_db_uri(dbinfo):
     engine = dbinfo.get('ENGINE') or 'sqlite'
     driver = dbinfo.get('DRIVER') or 'sqlite'
@@ -21,6 +22,12 @@ class Config:
     DEBUG = False
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = 'dsafasdfasdfkla'
+
+    SESSION_TYPE = 'redis'
+    SESSION_COOKIE_SECURE = True
+    SESSION_USE_SIGNER = True
+    # SESSION_REDIS = '' 默认链接本机
 
 
 class DevelopmentConfig(Config):
@@ -50,6 +57,7 @@ class TestingConfig(Config):
         'NAME': 'gpi'
     }
     SQLALCHEMY_DATABASE_URI = get_db_uri(dbinfo)
+
 
 
 class StagingConfig(Config):

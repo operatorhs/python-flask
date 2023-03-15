@@ -9,8 +9,8 @@ import os
 
 user_bp = Blueprint('users', __name__, url_prefix='/users')
 
-
-required_login_list = ['/users/center', '/users/update', '/users/publish']
+#  '/users/update'
+required_login_list = ['/users/center', '/users/publish']
 
 
 @user_bp.before_app_first_request
@@ -149,7 +149,6 @@ def send_msg():
 
 @user_bp.route('/center')
 def user_center():
-    print(g.user)
     return render_template('users/center.html', user=g.user)
 
 
@@ -159,23 +158,27 @@ def user_change():
         # phone
         # avatar
         phone = request.form.get('phone')
-        file = request.files.get('avatar')
+        print(request.files.keys())
+        file = request.files.get('file')
         print('====>', file)
         filename = file.filename
         suffix = filename.rsplit('.')[-1]
-        ALLOWED_EXTENSIONS = ['png', 'jpg']
+        ALLOWED_EXTENSIONS = ['png', 'jpg', 'mp4']
         if suffix in ALLOWED_EXTENSIONS:
             filename = secure_filename(filename)  # 保证文件名是符合python 规则的
             file.save(os.path.join(settings.Config.UPLOAD_DIR, filename))
-            user = g.user
+            # user = g.user
             path = 'upload'
-            user.icon = os.path.join(path, filename)
-            db.session.commit()
+            # user.icon = os.path.join(path, filename)
+            # db.session.commit()
+            # {location: "/demo/image/1.jpg"}
+            return {
+                "location": os.path.join('static', path, filename)
+            }
         else:
             return '上传附件失败'
 
         # file.save(os.path.join('./upload', 'a.png'))
-        return '文件上传成功'
 
         # users = User.query.all()
         # for user in users:
@@ -184,7 +187,6 @@ def user_change():
         #         return render_template('users/center.html', user=g.user, msg="此号码已经被注册")
 
     return render_template('users/center.html', user=g.user)
-
 
 @user_bp.route('/publish', methods=['GET', 'POST'])
 def publish():

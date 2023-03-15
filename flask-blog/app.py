@@ -3,6 +3,7 @@ from flask_script import Manager
 from flask_migrate import MigrateCommand, Migrate
 
 from exts import db
+from flask_cors import CORS
 
 from apps.user.models import User
 from apps.article.models import *
@@ -12,6 +13,8 @@ app = create_app()
 manager = Manager(app=app)
 migrate = Migrate(app=app, db=db)
 manager.add_command('db', MigrateCommand)
+
+CORS(app, resources=r'/*')
 
 
 @app.route('/')

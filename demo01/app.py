@@ -1,9 +1,9 @@
 from flask import Flask, current_app, render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from sqlalchemy import text, desc, func
 
 app = Flask(__name__)
-
 app.config['ENV'] = 'development'
 
 
@@ -23,6 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:hs6307609@127.0.0.
 
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 # with db.engine.connect() as conn:
@@ -83,6 +84,32 @@ class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(200))
     articles = db.relationship('Article', secondary=article_tag_table, back_populates='tags')
+
+
+class Category(db.Model):
+    __tablename__ = 'category'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100))
+    newses = db.relationship('News', back_populates='category')
+
+
+class News(db.Model):
+    __tablename__ = 'news'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(100))
+    content = db.Column(db.Text)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    category = db.relationship('Category', back_populates='newses')
+
+
+@app.route('/add_news')
+def add_news():
+    category = Category(name='军事')
+    news = News(title='新闻1', content='新闻内容1')
+    news.category = category
+    db.session.add(news)
+    db.session.commit()
+    return 'add_news success'
 
 
 @app.route('/many2many')
