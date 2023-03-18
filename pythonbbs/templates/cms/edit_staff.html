@@ -12,16 +12,17 @@
 {%- endblock %}
 
 {% block main_content %}
-  <form action="" method="post">
+  <form action="{{ url_for('cms.edit_staff', user_id=user_info.id) }}" method="post">
+    <input type="hidden" value="{{ csrf_token() }}" name="csrf_token" />
     <div class="form-container">
       <div class="form-group form-inline">
-        <label for="email">邮箱：</label>
-        <input id="email" type="email" class="form-control" name="email" placeholder="邮箱" readonly value="{{ user.email }}">
+        <label for="email">邮箱qq：{{ user_info.username }}</label>
+        <input id="email" type="email" class="form-control" name="email" placeholder="邮箱" readonly value="{{ user_info.email }}">
       </div>
       <div class="form-group">
         <label>员工：</label>
         <div class="form-check form-check-inline">
-          {% if user.is_staff %}
+          {% if user_info.is_staff %}
             <input class="form-check-input" type="radio" name="is_staff" id="staff1" value="1" checked>
           {% else %}
             <input class="form-check-input" type="radio" name="is_staff" id="staff1" value="1">
@@ -37,7 +38,7 @@
         <label>角色：</label>
         {% for role in roles %}
           <div class="form-check form-check-inline">
-            {% if user.role.id == role.id %}
+            {% if user_info.role.id == role.id %}
               <input class="form-check-input" type="radio" name="role" id="inlineRadio{{ loop.index }}" value="{{ role.id }}" checked>
             {% else %}
               <input class="form-check-input" type="radio" name="role" id="inlineRadio{{ loop.index }}" value="{{ role.id }}">

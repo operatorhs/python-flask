@@ -73,4 +73,4 @@ class UserModel(db.Model):
         return check_password_hash(self.password, raw_password)
 
     def has_permission(self, permission):
-        return permission in [permission for permission in self.role.permissions]
+        return permission in [permission.name for permission in self.role.permissions]

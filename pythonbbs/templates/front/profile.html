@@ -18,27 +18,55 @@
 
 {% block body %}
   <div class="profile-box">
-  <h1 style="text-align: center;">张三个人中心</h1>
-    <table class="table table-bordered mt-5">
-      <tbody>
-        <tr>
-          <th width="100px">用户名：</th>
-          <td>张三</td>
-        </tr>
-        <tr>
-          <th>头像：</th>
-          <td>
-            <img class="avatar" src="https://pic1.zhimg.com/80/v2-d03aa05346fd377da12dc324d79acda3_720w.jpg" alt="">
-          </td>
-        </tr>
-        <tr>
-          <th>签名：</th>
-          <td>我就是我，不一样的烟火！</td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="text-align: center;">
-      <button class="btn btn-primary">保存</button>
-    </div>
+  <h1 style="text-align: center;">{{ g.user.username }}个人中心</h1>
+      <form action="{{ url_for('user.edit_profile') }}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+           <table class="table table-bordered mt-5">
+              <tbody>
+                <tr>
+                  <td>
+                      <div style="width: 70px">用户名：</div>
+                  </td>
+                   <td>
+                       {% if is_mine %}
+                           <input type="text" name="username" value="{{ user.username }}">
+                       {% else %}
+                           {{ user.username }}
+                       {% endif %}
+                   </td>
+                </tr>
+                <tr>
+                  <td>头像：</td>
+                  <td>
+        {#            <img class="avatar" src="https://pic1.zhimg.com/80/v2-d03aa05346fd377da12dc324d79acda3_720w.jpg" alt="">#}
+                      {% if user.avatar %}
+                          <img src="{{ 'http://127.0.0.1:5000/' + user.avatar }}" />
+                      {% else %}
+                          <img class="avatar" src="https://pic1.zhimg.com/80/v2-d03aa05346fd377da12dc324d79acda3_720w.jpg">
+                      {% endif %}
+                      {% if is_mine %}
+                          <input type="file" name="avatar" accept="image/jpeg, image/png" value="上传头像">
+                      {% endif %}
+                  </td>
+                </tr>
+                <tr>
+                  <td>签名：</td>
+                  <td>
+                      {% if is_mine %}
+                          <input type="text" name="signature" value="{{ user.signature or '' }}">
+                      {% else %}
+                          {{ user.signature or '' }}
+                      {% endif %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {% if is_mine %}
+                <div style="text-align: center;">
+                    <button class="btn btn-primary">保存</button>
+                </div>
+            {% endif %}
+      </form>
+
   </div>
 {% endblock %}

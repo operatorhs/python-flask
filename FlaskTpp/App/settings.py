@@ -31,7 +31,7 @@ class DevelopmentConfig(Config):
         'PASSWORD': 'hs6307609',
         'HOST': '127.0.0.1',
         'PORT': '3306',
-        'NAME': 'gpi'
+        'NAME': 'flask_tpp'
     }
     # mysql+pymysql://root:hs6307609@127.0.0.1:3306/gpi
     SQLALCHEMY_DATABASE_URI = get_db_uri(dbinfo)

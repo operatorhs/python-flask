@@ -37,5 +37,5 @@ class CommentModel(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     author_id = db.Column(db.String(100), db.ForeignKey('user.id'), nullable=False)
 
-    post = db.relationship('PostModel', backref=db.backref('comments', order_by=create_time.desc()))
+    post = db.relationship('PostModel', backref=db.backref('comments', order_by=create_time.desc(), lazy='dynamic'))
     author = db.relationship('UserModel', back_populates='comments')

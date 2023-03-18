@@ -86,7 +86,7 @@ def index():
     start = (page - 1) * current_app.config.get('PER_PAGE_COUNT')
     end = start + current_app.config.get('PER_PAGE_COUNT')
 
-    query_obj = PostModel.query.order_by(PostModel.create_time.desc())
+    query_obj = PostModel.query.filter_by(is_active=True).order_by(PostModel.create_time.desc())
     if board_id:
         query_obj = query_obj.filter_by(board_id=board_id)
     total = query_obj.count()

@@ -1,5 +1,6 @@
-from wtforms import StringField, ValidationError, BooleanField
+from wtforms import StringField, ValidationError, BooleanField, FileField
 from wtforms.validators import Email, Length, EqualTo
+from flask_wtf.file import FileAllowed
 from ext import cache
 from models.user import UserModel
 from .baseform import BaseFrom
@@ -31,3 +32,14 @@ class LoginForm(BaseFrom):
     email = StringField(validators=[Email(message='请输入正确格式的邮箱')])
     password = StringField(validators=[Length(min=6, max=20, message='请输入正确长度的密码！')])
     remember = BooleanField()
+
+
+class EditProfileForm(BaseFrom):
+    username = StringField(validators=[Length(min=2, max=20, message='请输入正确格式的用户名！')])
+    avatar = FileField(validators=[FileAllowed(['jpg', 'jpeg', 'png'], message='文件类型错误！')])
+    signature = StringField()
+
+    def validate_signature(self, field):
+        signature = field.data
+        if signature and len(signature) > 100:
+            raise ValidationError(message='签名不能超过100个字符')

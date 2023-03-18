@@ -19,7 +19,7 @@
                 <p class="post-info">
                   <span>作者: {{ post.author.username }}</span>
                   <span>发表时间:{{ post.create_time }}</span>
-                  <span>评论:{{ post.comments | length }}</span>
+                  <span>评论:{{ post.comments.filter_by(is_active=True).count() }}</span>
                 </p>
               </div>
             </li>

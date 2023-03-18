@@ -1,11 +1,12 @@
 from flask import Flask
 from flask_migrate import Migrate
 import Config
-from ext import db, mail, cache, csrf
+from ext import db, mail, cache, csrf, avatars
 from blueprints import init_view
 from bbs_celery import make_celery
 # from flask_wtf import CSRFProtect
 import commands
+import filters
 import hooks
 
 
@@ -22,11 +23,17 @@ cache.init_app(app)
 celery = make_celery(app)
 # CSRFProtect(app)
 csrf.init_app(app)
+avatars.init_app(app)
+
+app.template_filter('email_hash')(filters.email_hash)
 
 init_view(app)
 
 # 添加钩子函数
 app.before_request(hooks.bbs_before_request)
+app.before_request(hooks.bbs_401_error)
+app.before_request(hooks.bbs_404_error)
+app.before_request(hooks.bbs_500_error)
 
 # 添加命令
 app.cli.command('my-command')(commands.my_command)

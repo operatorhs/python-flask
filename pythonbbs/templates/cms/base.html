@@ -35,13 +35,22 @@
     <div class="sidebar">
       <ul class="nav-sidebar">
         <li class="unfold"><a href="{{ url_for('cms.index') }}">首页</a></li>
-
         {% set user = g.user %}
-        <li class="nav-group post-manage"><a href="#">帖子管理</a></li>
-        <li class="comments-manage"><a href="#">评论管理</a></li>
-        <li class="board-manage"><a href="#">板块管理</a></li>
-        <li class="nav-group user-manage"><a href="#">用户管理</a></li>
-        <li class="nav-group UserModel-manage"><a href="#">员工管理</a></li>
+        {% if user.has_permission(PermissionEnum.POST) %}
+            <li class="nav-group post-manage"><a href="{{ url_for('cms.post_list') }}">帖子管理</a></li>
+        {% endif %}
+{#        {% if user.has_permission(PermissionEnum.COMMIT) %}#}
+{#            <li class="comments-manage"><a href="#">评论管理</a></li>#}
+{#        {% endif %}#}
+        {% if user.has_permission(PermissionEnum.BOARD) %}
+           <li class="board-manage"><a href="{{ url_for('cms.posts_board') }}">板块管理</a></li>
+        {% endif %}
+        {% if user.has_permission(PermissionEnum.FRONT_USER) %}
+            <li class="nav-group user-manage"><a href="{{ url_for('cms.user_list') }}">用户管理</a></li>
+        {% endif %}
+        {% if user.has_permission(PermissionEnum.CMS_USER) %}
+            <li class="nav-group UserModel-manage"><a href="{{ url_for('cms.staff_list') }}">员工管理</a></li>
+        {% endif %}
       </ul>
     </div>
   </div>

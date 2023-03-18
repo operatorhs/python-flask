@@ -14,6 +14,7 @@ class DevelopmentConfig(BaseConfig):
     # 基本路径设置
     BASE_DIR = os.path.dirname(os.path.abspath(__name__))
     UPLOAD_IMAGE_PATH = os.path.join(BASE_DIR, 'static', 'upload')
+    AVATAR_SAVE_PATH = os.path.join(BASE_DIR, 'static', 'avatars')
 
     # 邮箱配置
     MAIL_SERVER = 'smtp.163.com'

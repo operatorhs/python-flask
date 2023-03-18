@@ -14,19 +14,19 @@
       <h2>{{ post.title }}</h2>
       <p class="post-info-group">
         <span>发表时间：{{ post.create_time }}</span>
-        <span>作者：{{ post.author.username }}</span>
+        <span>作者：<a href="{{ url_for('user.profile', user_id=post.author.id) }}">{{ post.author.username }}</a></span>
         <span>所属板块：{{ post.board.name }}</span>
         <span>阅读数：{{ post.read_count }}</span>
-        <span>评论数：{{ post.comments | length }}</span>
+        <span>评论数：{{ post.comments.filter_by(is_active=True).count() }}</span>
       </p>
       <article class="post-content" id="post-content">
-        {{ post.content | safe }}
+        {{ post.content }}
       </article>
     </div>
     <div class="comment-group">
       <h3>评论列表</h3>
       <ul class="comment-list-group">
-          {% for comment in post.comments %}
+          {% for comment in post.comments.filter_by(is_active=True) %}
               <li>
                   <div class="comment-content">
                     <p class="author-info">

@@ -1,8 +1,16 @@
-from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash, session
+import os
+
+from flask import Blueprint, render_template, request, current_app,\
+    redirect, url_for, flash, session, g, send_from_directory
+
+from decorators import login_required
+from werkzeug.datastructures import CombinedMultiDict
+from werkzeug.utils import secure_filename
+
 from ext import cache, db
 from utils import restful
 import random
-from forms.user import RegisterForm, LoginForm
+from forms.user import RegisterForm, LoginForm, EditProfileForm
 from models.user import UserModel
 
 bp = Blueprint('user', __name__, url_prefix='/user')
@@ -41,6 +49,9 @@ def login():
             remember = form.remember.data
             user = UserModel.query.filter_by(email=email).first()
             if user and user.check_password(password):
+                if not user.is_active:
+                    flash('该用户已被禁用')
+                    return redirect(url_for('user.login'))
                 session['user_id'] = user.id
                 if remember:
                     session.permanent = True
@@ -81,3 +92,48 @@ def get_cache():
     captcha = cache.get('2239537420@qq.com')
     return captcha
 
+
+@bp.get('/profile/<string:user_id>')
+@login_required
+def profile(user_id):
+    user = UserModel.query.get(user_id)
+    is_mine = False
+    if hasattr(g, 'user') and g.user.id == user_id:
+        is_mine = True
+    context = {
+        'user': user,
+        'is_mine': is_mine
+    }
+    return render_template('front/profile.html', **context)
+
+
+@bp.get('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
+
+@bp.post('/profile/edit')
+@login_required
+def edit_profile():
+    form = EditProfileForm(CombinedMultiDict([request.form, request.files]))
+    if form.validate():
+        username = form.username.data
+        avatar = form.avatar.data
+        signature = form.signature.data
+
+        if avatar:
+            filename = secure_filename(avatar.filename)
+            avatar_path = os.path.join(current_app.config.get('AVATAR_SAVE_PATH'), filename)
+            avatar.save(avatar_path)
+            g.user.avatar = os.path.join('static', 'avatars', filename)
+            # g.user.avatar = url_for('media.media_file', filename=os.path.join('avatars', filename))
+
+        g.user.username = username
+        g.user.signature = signature
+        db.session.commit()
+        return redirect(url_for('user.profile', user_id=g.user.id))
+    else:
+        for message in form.messages:
+            flash(message)
+        return redirect(url_for('user.profile', user_id=g.user.id))
