@@ -11,6 +11,7 @@ cur_dir = os.path.dirname(__file__)
 loglevel = 'warning'
 errorlog = os.path.join(cur_dir, 'error.log')
 accesslog = os.path.join(cur_dir, 'access.log')
+daemon = True
 
 
 
