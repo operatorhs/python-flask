@@ -1,0 +1,39 @@
+ # 负载均衡
+ upstream pythonbbs{
+    server 127.0.0.1:8000;
+ }
+
+ # 配置服务器
+ server {
+    listen: 80;
+    server_name 43.142.49.4;
+    charset utf-8;
+
+    access_log  /var/log/nginx/pythonbbs_access.log;
+    error_log   /var/log/nginx/pythonbbs_error.log;
+
+    # 最大文件尺寸
+    client_max_body_size 75M;
+
+    # 静态文件地址
+    location /static {
+       alias /root/python-flask/pythonbbs/static;
+       # 静态文件过期时间
+       expires 60d
+    }
+     location /media {
+       # 文件上传地址
+       alias /root/python-flask/pythonbbs/media;
+       expires 100d;
+     }
+ # 最后，发送所有非静态文件请求到Gunicorn
+     location / {
+       # proxy_pass http://pythonbbs;
+       # uwsgi_params文件地址
+       include     /etc/nginx/uwsgi_params;
+       proxy_set_header  Host  $host;
+       proxy_set_header  X-Forwarded-For           $proxy_add_x_forwarded_for;
+       proxy_set_header  X-Real-IP                 $remote_addr;
+       proxy_set_header  X-Forwarded-Proto $scheme;
+    }
+ }
