@@ -31,10 +31,9 @@ init_view(app)
 
 # 添加钩子函数
 app.before_request(hooks.bbs_before_request)
-app.before_request(hooks.bbs_401_error)
-app.before_request(hooks.bbs_404_error)
-app.before_request(hooks.bbs_500_error)
-
+app.errorhandler(404)(hooks.bbs_404_error)
+app.errorhandler(401)(hooks.bbs_401_error)
+app.errorhandler(500)(hooks.bbs_500_error)
 # 添加命令
 app.cli.command('my-command')(commands.my_command)
 app.cli.command('create-permission')(commands.create_permission)
