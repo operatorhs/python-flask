@@ -67,7 +67,7 @@ def create_test_user():
 @click.option('--password', '-p')
 def create_admin(username, email, password):
     admin_role = RoleModel.query.filter_by(name='管理员').first()
-    admin_user = UserModel(username=username, email=email, password=password, is_stff=True, role=admin_role)
+    admin_user = UserModel(username=username, email=email, password=password, is_staff=True, role=admin_role)
     db.session.add(admin_user)
     db.session.commit()
     click.echo('管理员创建成功')

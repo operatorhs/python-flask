@@ -58,3 +58,4 @@ if __name__ == '__main__':
     s = os.path.dirname(os.path.abspath(__name__))
     c = os.path.join(s, 'static', 'upload')
     print(c)
+
